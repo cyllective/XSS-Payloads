@@ -1,0 +1,46 @@
+version: '3.1'
+services:
+  wordpress:
+    build:
+        context: .
+        dockerfile: Dockerfile
+    restart: always
+    depends_on:
+      - mysql
+    ports:
+      - 7777:80
+    environment:
+      WORDPRESS_DB_HOST: mysql 
+      WORDPRESS_DB_USER: exampleuser
+      WORDPRESS_DB_PASSWORD: examplepass
+      WORDPRESS_DB_NAME: exampledb
+      MYSQL_PORT_3306_TCP: tcp://mysql:3306
+      UPLOAD_LIMIT: 1G
+    volumes:
+      - wp_data:/var/www/html
+
+  mysql:
+    image: mysql:5.7
+    restart: always
+    environment:
+      MYSQL_DATABASE: exampledb
+      MYSQL_USER: exampleuser
+      MYSQL_PASSWORD: examplepass
+      MYSQL_RANDOM_ROOT_PASSWORD: '1'
+      MYSQL_ROOT_HOST: 127.0.0.1/8,172.0.0.0/8,192.168.0.0/24
+
+  wpcli:
+    image: wordpress:cli
+    entrypoint: wp  
+    command: "--info"
+    environment:
+      WORDPRESS_DB_HOST: mysql 
+      WORDPRESS_DB_USER: exampleuser
+      WORDPRESS_DB_PASSWORD: examplepass
+      WORDPRESS_DB_NAME: exampledb
+      MYSQL_PORT_3306_TCP: tcp://mysql:3306
+    volumes:
+      - wp_data:/var/www/html
+
+volumes:
+  wp_data:

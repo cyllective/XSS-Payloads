@@ -1,2 +1,2 @@
-# XSS-Payloads
-A repository containing various XSS payloads.
+# PoC
+A repository containing various PoC payloads.
